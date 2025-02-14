@@ -4,6 +4,7 @@ use App\Models\Category;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Pagination\Paginator;
 
 
 
@@ -14,7 +15,12 @@ Route::get('/', function ()
 
 Route::get('/posts', function ()
 {
-    return view('posts', ['title' => 'Blog' ,'posts'=> Post::filter(request(['search', 'category', 'author']))->get()]);
+    return view('posts', [
+        'title' => 'Blog' ,
+        'posts'=> Post::filter(request([
+            'search',
+            'category',
+            'author']))->latest()->paginate(9)->appends(request()->query())]);
 });
 
 Route::get('/posts/{post:slug}', function(Post $post)
